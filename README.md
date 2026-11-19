@@ -2,7 +2,7 @@
 
 AER 的四个开源浮动运营助手，来源于 X 知识助手的页面提取与内容创作流程。插件由 GitHub 独立分发，不依赖 Chrome 扩展商店。
 
-> **当前为 0.1.0 开发预览。** 下载包要求 AER Floating Plugin Host API 3。宿主接入源码已在 AER 本地开发分支中添加，但尚未编译或完成真实浏览器验收；现有正式版 AER 不能直接使用这些包。`.aerplugin` 不是 Chrome CRX 扩展。
+> **当前为 0.1.0 开发预览。** 下载包要求 AER Floating Plugin Host API 3，宿主已随 [AER 0.7.26111913](https://github.com/aerbrowser/heyaer/releases/tag/v0.7.26111913) 编译、签名、公证并正式发布。请先升级到该版本或后续兼容版本，再从设置下载插件。真实网站、浮窗交互与模型流程尚未完整验收；`.aerplugin` 不是 Chrome CRX 扩展。
 
 | 插件 | 主要用途 |
 | --- | --- |
@@ -54,6 +54,6 @@ AER_PLUGINS_SIGNING_KEY=/secure/path/private.pem node scripts/catalog.mjs
 
 ## 验证状态
 
-已完成源码与分发文件的静态检查及独立 Web 界面预览。尚未运行回归测试、编译 AER 或验收原生浮窗的焦点、输入法、全屏、导航取消和真实模型调用。预览包不能视为生产稳定版。
+已完成源码与分发文件的静态检查及独立 Web 界面预览。AER 0.7.26111913 已完成宿主编译、包内资源来源核对、Developer ID 签名、Apple 公证和发行完整性校验。尚未运行插件功能回归，原生浮窗的焦点、输入法、全屏、导航取消和真实模型调用仍待验收。编译发行不代表上述流程全部通过，插件预览包不能视为生产稳定版。
 
 MIT License.
