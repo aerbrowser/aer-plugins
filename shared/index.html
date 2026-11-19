@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; frame-src 'none'"><title>AER 运营助手</title><link rel="stylesheet" href="style.css"><script type="module" src="main.js"></script></head>
+<body>
+<header><div id="mark" aria-hidden="true">A</div><div class="heading"><strong id="name">运营助手</strong><small>页面素材 · 内容创作</small></div><button id="menu" class="icon" aria-label="插件菜单">···</button><button id="minimize" class="icon" aria-label="收起">−</button><button id="close" class="icon" aria-label="本次关闭">×</button></header>
+<main>
+<div class="source"><span class="eyebrow">当前素材</span><button id="capture">读取页面</button><p id="source">选中一段文字，或读取当前页面正文</p></div>
+<label for="input" class="field-label">原文 <span id="count">0 字</span></label><textarea id="input" placeholder="也可以在这里粘贴或编辑素材…" maxlength="60000"></textarea>
+<div class="actions" role="group" aria-label="内容处理"><button data-action="translate">翻译</button><button data-action="rewrite" class="primary">二创</button><button data-action="shorten">缩写</button><button data-action="titles">拟标题</button></div>
+<div class="options"><label>翻译为 <select id="target"><option>简体中文</option><option>English</option><option>日本語</option></select></label><button id="cancel" hidden>停止生成</button></div>
+<p class="privacy">点击处理后，素材会发送到你在 AER 配置的模型服务。</p>
+<div class="result-label"><label for="output">创作结果</label><button id="copy">复制</button></div><textarea id="output" placeholder="生成的内容会出现在这里，可继续修改…" maxlength="60000"></textarea>
+<p id="status" role="status" aria-live="polite">就绪</p>
+</main><footer><span>草稿保存在当前浏览器资料中</span><button id="settings">浮窗设置</button></footer>
+</body></html>
