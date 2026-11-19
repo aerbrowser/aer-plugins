@@ -17,7 +17,7 @@ SDK 将 `{id, method, params}` 发送至 `window.webkit.messageHandlers.aer`，�
 | `panel.close` | 本次文档关闭 |
 | `panel.minimize` | 收起 / 展开 |
 | `panel.menu` | 原生插件切换及关闭菜单 |
-| `settings.open` | 打开 AER 插件设置 |
+| `settings.open` | 打开 Aer 插件设置 |
 
 网页提取由宿主固定的只读脚本执行，插件不能提供脚本。仅采集当前文档已渲染文本，排除表单、可编辑区域、隐藏节点、导航等。跨源 iframe、未加载帖子和需要登录后才可见的数据不保证提取。页面本身不可信，页面文本作为模型用户素材，不作为系统指令。
 
