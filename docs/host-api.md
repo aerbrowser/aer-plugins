@@ -1,6 +1,6 @@
 # Floating Plugin Host API 4
 
-当前源码为 0.2.0 / Host API 4，尚未发布。已发布的 0.1.0 使用 API 3。新宿主兼容两者，旧宿主会拒绝 API 4 包。不能仅发布新插件就获得编辑器填入能力，必须先发行兼容宿主，再发布插件包和签名目录。
+当前插件包为 0.2.0 / Host API 4，已发布到 `aerbrowser/aer-plugins` 的 `v0.2.0`。已发布的 0.1.0 使用 API 3。新宿主兼容两者，旧宿主会拒绝 API 4 包。编辑器填入能力需要兼容 Host API 4 的宿主；旧版 Aer 需要先升级宿主。
 
 包使用 `kind: plugin`、`dataSchema: 1`、固定入口 `ui/index.html`。API 3 权限按序为 `page.read`, `ai.transform`, `storage.local`, `clipboard.write`；API 4 在其后增加 `editor.fill`。安装器按版本核对完整权限列表。API 3 包不能调用编辑器接口。
 
@@ -51,4 +51,4 @@ Aer macOS 宿主使用原生 NSPanel 和隔离 WKWebView，非持久数据存储
 
 ## 分发
 
-动态包使用 ECDSA P-256 签名目录、序号/有效期检查、大小/SHA-256、ZIP 路径/符号链接校验和原子激活。包内容变化必须升版本；不得覆盖旧资产。当前源码 0.2.0 已生成四个本地 `.aerplugin` 包，但尚未签署或上传；`catalog/stable.json` 仍指向已发布 0.1.0。
+动态包使用 ECDSA P-256 签名目录、序号/有效期检查、大小/SHA-256、ZIP 路径/符号链接校验和原子激活。包内容变化必须升版本；不得覆盖旧资产。0.2.0 的四个 `.aerplugin` 已签署并上传到 `v0.2.0`，`catalog/stable.json` 已更新为 Host API 4；宿主内置公钥未变。
