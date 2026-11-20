@@ -20,7 +20,7 @@ for path in sorted((root / 'plugins').glob('*/manifest.json')):
             entry.compress_type = zipfile.ZIP_DEFLATED
             archive.writestr(entry, data)
     data = (out / name).read_bytes()
-    releases.append({'id':ident,'version':version,'hostAPI':3,'dataSchema':1,'bytes':len(data),
+    releases.append({'id':ident,'version':version,'hostAPI':manifest['hostAPI'],'dataSchema':manifest['dataSchema'],'bytes':len(data),
         'sha256':hashlib.sha256(data).hexdigest(),
         'url':f'https://github.com/aerbrowser/aer-plugins/releases/download/v{version}/{name}'})
 (out / 'releases.json').write_text(json.dumps(releases,indent=2)+'\n')

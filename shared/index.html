@@ -1,14 +1,127 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; frame-src 'none'"><title>AER 运营助手</title><link rel="stylesheet" href="style.css"><script type="module" src="main.js"></script></head>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'; img-src data:; base-uri 'none'; form-action 'none'; frame-src 'none'">
+  <title>Aer 运营助手</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="main.js"></script>
+</head>
 <body>
-<header><div id="mark" aria-hidden="true">A</div><div class="heading"><strong id="name">运营助手</strong><small>页面素材 · 内容创作</small></div><button id="menu" class="icon" aria-label="插件菜单">···</button><button id="minimize" class="icon" aria-label="收起">−</button><button id="close" class="icon" aria-label="本次关闭">×</button></header>
-<main>
-<div class="source"><span class="eyebrow">当前素材</span><button id="capture">读取页面</button><p id="source">选中一段文字，或读取当前页面正文</p></div>
-<label for="input" class="field-label">原文 <span id="count">0 字</span></label><textarea id="input" placeholder="也可以在这里粘贴或编辑素材…" maxlength="60000"></textarea>
-<div class="actions" role="group" aria-label="内容处理"><button data-action="translate">翻译</button><button data-action="rewrite" class="primary">二创</button><button data-action="shorten">缩写</button><button data-action="titles">拟标题</button></div>
-<div class="options"><label>翻译为 <select id="target"><option>简体中文</option><option>English</option><option>日本語</option></select></label><button id="cancel" hidden>停止生成</button></div>
-<p class="privacy">点击处理后，素材会发送到你在 AER 配置的模型服务。</p>
-<div class="result-label"><label for="output">创作结果</label><button id="copy">复制</button></div><textarea id="output" placeholder="生成的内容会出现在这里，可继续修改…" maxlength="60000"></textarea>
-<p id="status" role="status" aria-live="polite">就绪</p>
-</main><footer><span>草稿保存在当前浏览器资料中</span><button id="settings">浮窗设置</button></footer>
-</body></html>
+  <header class="topbar">
+    <div id="mark" aria-hidden="true">A</div>
+    <div class="heading"><small id="subtitle">Aer 运营助手</small><strong id="name">运营助手</strong></div>
+    <div class="header-actions">
+      <button id="settings" class="header-icon" aria-label="设置" title="设置">⚙</button>
+      <button id="close" class="header-icon" aria-label="关闭面板，保留 Aer 浮标" title="关闭面板，保留 Aer 浮标">×</button>
+    </div>
+  </header>
+
+  <nav class="workspace-tabs" role="tablist" aria-label="运营工作区">
+    <button class="workspace-tab active" role="tab" aria-selected="true" data-workspace="extract">原文</button>
+    <button class="workspace-tab" role="tab" aria-selected="false" data-workspace="create">创作</button>
+    <button id="platform-tab" class="workspace-tab" role="tab" aria-selected="false" data-workspace="publish">公众号</button>
+    <button class="workspace-tab" role="tab" aria-selected="false" data-workspace="images">图片</button>
+    <button class="workspace-tab" role="tab" aria-selected="false" data-workspace="video">视频</button>
+    <button class="workspace-tab" role="tab" aria-selected="false" data-workspace="search">搜索</button>
+  </nav>
+
+  <main>
+    <section class="workspace-panel active" data-panel="extract" role="tabpanel">
+      <section class="toolbox">
+        <label class="style-picker">预览风格<select id="style"><option value="经典绿">经典绿</option><option value="简洁蓝">简洁蓝</option><option value="知识紫">知识紫</option></select></label>
+        <div class="action-grid" role="group" aria-label="内容操作">
+          <button data-action="translate" class="action action-green"><strong>翻译</strong><small>生成中文稿</small></button>
+          <button data-action="rewrite" class="action action-blue"><strong>二创内容</strong><small>翻译+点评 / 改写</small></button>
+          <button data-action="titles" class="action action-yellow"><strong>爆款标题</strong><small>单独生成标题</small></button>
+          <button data-action="shorten" class="action action-green"><strong>缩写</strong><small>保留关键事实</small></button>
+          <button id="use-original" class="action action-dark"><strong>使用原文</strong><small>带入创作编辑页</small></button>
+          <button id="copy-markdown" class="action action-purple"><strong>复制 Markdown</strong><small>复制原文与图片链接</small></button>
+        </div>
+      </section>
+      <p class="import-note">原文与创作稿分开保存。生成内容时使用 Aer 中配置的模型。</p>
+
+      <section id="content-card" class="content-card">
+        <div class="content-card-head">
+          <div class="content-title-wrap"><h1 id="card-title">原文 Markdown</h1><p id="source-meta">正在抓取当前页面…</p></div>
+          <button id="capture" class="refresh" aria-label="重新抓取当前页面" title="重新抓取当前页面">↻</button>
+        </div>
+        <div class="content-tabs" role="tablist" aria-label="稿件视图">
+          <button class="content-tab active" data-view="preview" role="tab" aria-selected="true">预览</button>
+          <button class="content-tab" data-view="markdown" role="tab" aria-selected="false">Markdown</button>
+        </div>
+        <article id="markdown-preview" class="article-preview"><p class="empty">抓取后显示格式化内容。</p></article>
+        <textarea id="markdown-source" class="markdown-source" maxlength="60000" spellcheck="false" placeholder="正在从当前页面抓取 Markdown…" aria-label="Markdown 原文"></textarea>
+        <div class="asset-row"><span id="image-summary">未发现图片</span><button id="download-all" disabled>下载全部图片</button></div>
+      </section>
+    </section>
+
+    <section class="workspace-panel" data-panel="create" role="tabpanel" hidden>
+      <section class="create-card">
+        <div class="panel-kicker">创作</div><h2>编辑创作稿</h2><p id="draft-source">以原文为素材，生成结果仍可继续编辑。</p>
+        <div class="create-actions"><button data-action="translate" class="primary">翻译</button><button data-action="rewrite">二创内容</button><button data-action="shorten">缩写</button><button data-action="titles">拟标题</button></div>
+        <label class="target-picker">翻译为<select id="target"><option>简体中文</option><option>English</option><option>日本語</option></select></label>
+        <section id="title-field" class="title-field"><label for="title">标题</label><input id="title" type="text" maxlength="200" placeholder="填写标题，或从拟标题结果中选择"></section>
+        <div id="suggestions" aria-label="备选标题" hidden></div>
+        <label class="output-label" for="output">创作正文</label><textarea id="output" class="output-editor" maxlength="60000" placeholder="点击翻译、二创或缩写，结果会出现在这里…"></textarea>
+        <div class="result-footer"><span id="output-count">0 字</span><button id="copy">复制标题和正文</button></div>
+        <button id="go-publish" class="primary publish-button">前往平台填入</button>
+        <button id="cancel" class="cancel-button" hidden>停止生成</button>
+      </section>
+    </section>
+
+    <section class="workspace-panel platform-panel" data-panel="publish" role="tabpanel" hidden>
+      <div id="platform-label" class="panel-kicker">公众号</div><h2 id="platform-heading">填入公众号编辑器</h2><p id="platform-description">打开平台后台，进入编辑页后自动填入标题和正文。</p>
+      <section class="publish-card"><div id="publish-title-field"><div class="publish-label">标题</div><div id="publish-title" class="publish-title">尚未填写</div></div><div class="publish-label">正文</div><div id="publish-body" class="publish-body">尚未生成创作内容</div><div class="publish-assets"><span id="publish-image-count">0 张图片来自原文</span><span>图片和封面需手动上传</span></div></section>
+      <div id="import-status" class="import-status" role="status" aria-live="polite" hidden><p id="import-message"></p><button id="cancel-import">停止自动填入</button></div>
+      <button id="publish" class="primary publish-button">打开公众号并填入 ↗</button>
+      <p class="manual-note">不会点击平台的发布按钮。填入完成后，请在平台检查排版、图片、封面和来源。</p>
+    </section>
+
+    <section class="workspace-panel images-panel" data-panel="images" role="tabpanel" hidden>
+      <div class="panel-kicker">图片</div><h2>原文图片</h2>
+      <div class="asset-row"><span id="gallery-summary">正在读取图片…</span><button id="download-gallery" disabled>下载全部图片</button></div>
+      <div id="image-gallery" class="image-gallery"></div>
+    </section>
+
+    <section class="workspace-panel video-panel" data-panel="video" role="tabpanel" hidden>
+      <div class="panel-kicker">视频</div><h2>从阅读到视频创作</h2>
+      <p id="video-capability" class="manual-note">正在检查视频功能…</p>
+      <details class="video-library" open><summary>网页中的视频 <span id="video-count">0</span></summary>
+        <div id="video-gallery"></div><p class="manual-note">未识别到文件时，先播放原视频再重新抓取。分段流、blob 与加密视频不能直接下载。</p>
+      </details>
+      <section class="create-card video-maker">
+        <div class="panel-kicker">图文转视频</div><h2>制作竖版图文视频</h2>
+        <p>原文或创作稿 → 调整字幕与图片 → 导出 MP4。1080 × 1920 · 30 fps · 无配音。</p>
+        <label class="target-picker">素材<select id="video-source"><option value="original">当前原文</option><option value="draft">创作稿</option></select></label>
+        <button id="video-build" class="primary publish-button">生成分镜</button>
+        <label class="output-label" for="video-title">视频标题</label><input id="video-title" class="video-title-input" maxlength="80" placeholder="用于画面标题和文件名">
+        <div id="storyboard" hidden>
+          <div class="storyboard-navigation"><button id="scene-prev" aria-label="上一个画面">‹</button><span id="scene-position"></span><button id="scene-next" aria-label="下一个画面">›</button></div>
+          <canvas id="scene-preview" width="1080" height="1920" aria-label="当前分镜预览"></canvas>
+          <label class="output-label" for="scene-text">当前画面的字幕</label><textarea id="scene-text" maxlength="120" rows="4"></textarea>
+          <label class="target-picker">图片<select id="scene-image"></select></label>
+          <label class="target-picker">时长<select id="scene-duration"><option value="4">4 秒</option><option value="6" selected>6 秒</option><option value="8">8 秒</option><option value="10">10 秒</option><option value="12">12 秒</option></select></label>
+          <div class="scene-actions"><button id="scene-add">添加画面</button><button id="scene-delete">删除画面</button></div>
+          <p id="video-total" class="manual-note"></p>
+          <button id="video-export" class="primary publish-button" disabled>导出 MP4 到下载文件夹</button>
+        </div>
+      </section>
+      <section id="video-job" class="import-status" hidden><p id="video-job-message"></p><progress id="video-progress" max="1" value="0"></progress><button id="video-cancel">取消</button><button id="video-preview" hidden>预览已保存的视频</button></section>
+      <section class="video-destinations"><h3>发布视频</h3><p class="manual-note">视频会先保存到下载文件夹，再打开平台并填入文案；上传视频和最终发表由你在平台确认。</p><label class="target-picker">发布到<select id="video-destination"><option value="wechat-channels">视频号</option><option value="xiaohongshu-video">小红书视频</option></select></label><button id="video-platform">打开视频发布页并填入文案 ↗</button></section>
+    </section>
+
+    <section class="workspace-panel search-panel" data-panel="search" role="tabpanel" hidden>
+      <div class="panel-kicker">搜索</div><h2>搜索当前原文</h2><p>在已抓取的 Markdown 中查找关键词。</p>
+      <div class="search-box"><input id="search-input" type="search" placeholder="输入关键词"><button id="search-button">搜索</button></div>
+      <div id="search-result" class="search-result">尚未搜索</div>
+    </section>
+  </main>
+
+  <footer>
+    <p id="status" role="status" aria-live="polite">正在读取原文…</p>
+    <div class="footer-links"><span id="draft-state">草稿保存在当前浏览器资料中</span><button id="menu" class="footer-menu">插件菜单</button></div>
+  </footer>
+</body>
+</html>

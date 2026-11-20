@@ -1,4 +1,4 @@
-// Host API 3. Only the isolated plugin main frame receives this transport.
+// Host API 4. Only the isolated plugin main frame receives this transport.
 let sequence = 0;
 const pending = new Map();
 window.__aerReply = ({id, result, error}) => {
@@ -10,7 +10,7 @@ window.__aerReply = ({id, result, error}) => {
 function invoke(method, params = {}) {
   return new Promise((resolve, reject) => {
     const transport = window.webkit?.messageHandlers?.aer;
-    if (!transport) return reject(new Error('请从支持浮动插件的 AER 中打开。'));
+    if (!transport) return reject(new Error('请从支持浮动插件的 Aer 中打开。'));
     const id = String(++sequence);
     const timer = setTimeout(() => { pending.delete(id); if(method === 'ai.transform') transport.postMessage({id: 'cancel-'+id, method: 'ai.cancel', params: {}}); reject(new Error('请求超时，请重试。')); }, 180000);
     pending.set(id, {resolve, reject, timer});
@@ -19,10 +19,32 @@ function invoke(method, params = {}) {
   });
 }
 export const aer = Object.freeze({
-  page: {capture: () => invoke('page.capture')},
+  page: {
+    capture: () => invoke('page.capture'),
+    image: url => invoke('page.image', {url}),
+    download: (url, name = '') => invoke('page.download', {url, name})
+  },
   ai: {transform: (action, text, target) => invoke('ai.transform', {action, text, target}), cancel: () => invoke('ai.cancel')},
   storage: {get: () => invoke('storage.get'), put: draft => invoke('storage.put', {draft})},
   clipboard: {write: text => invoke('clipboard.write', {text})},
+  editor: {
+    prepare: (title, body, options = {}) => invoke('editor.prepare', {
+      title, body,
+      ...(options && typeof options.destination === 'string' ? {destination: options.destination} : {})
+    }),
+    status: jobId => invoke('editor.status', {jobId}),
+    cancel: jobId => invoke('editor.cancel', {jobId})
+  },
+  media: {
+    capabilities: () => invoke('media.capabilities'),
+    download: (url, title) => invoke('media.download', {url, title}),
+    begin: title => invoke('media.begin', {title}),
+    scene: (jobId, png, seconds) => invoke('media.scene', {jobId, png, seconds}),
+    finish: jobId => invoke('media.finish', {jobId}),
+    status: jobId => invoke('media.status', {jobId}),
+    cancel: jobId => invoke('media.cancel', {jobId}),
+    preview: jobId => invoke('media.preview', {jobId})
+  },
   panel: {close: () => invoke('panel.close'), minimize: () => invoke('panel.minimize'), menu: () => invoke('panel.menu')},
   settings: () => invoke('settings.open')
 });

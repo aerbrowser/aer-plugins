@@ -1,9 +1,9 @@
 {
   "id": "wechat-assistant",
   "name": "公众号助手",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "kind": "plugin",
-  "hostAPI": 3,
+  "hostAPI": 4,
   "dataSchema": 1,
   "entry": "ui/index.html",
   "license": "MIT",
@@ -11,12 +11,13 @@
     "page.read",
     "ai.transform",
     "storage.local",
-    "clipboard.write"
+    "clipboard.write",
+    "editor.fill"
   ],
   "presentation": {
     "default": "floating",
-    "width": 380,
-    "height": 560,
+    "width": 420,
+    "height": "available",
     "enabledByDefault": true
   },
   "platform": "公众号",
@@ -27,5 +28,6 @@
   ],
   "instruction": "按公众号文章结构改写：明确标题、导语、分节正文和结尾，保持信息来源，不编造事实。",
   "translationInstruction": "你是专业中文译者。请把英文文章翻译成自然、准确、适合微信公众号阅读的简体中文。标题只做忠实直译，不要独立构思、润色成爆款标题或改写角度。保留标题层级、段落、列表、引用和图片 Markdown 链接，不要总结、删减或添加解释。",
-  "preferences": "术语和表达偏好：\n- 中文输出中，agent / Agent / AI agent 在 AI 语境下统一译为「智能体」，不要译成代理、经纪人或特工；只有明确指软件代理、平台代理或法律代理时才译为「代理」。\n- 中文输出中，prompt 译为「提示词」，workflow 译为「工作流」，context 译为「上下文」。\n- LLM 可译为「大语言模型」，面向普通读者时可写「大模型」；API、SaaS、AI、ChatGPT、Claude、Codex 等产品名或缩写可保留英文。\n- 避免港台腔、营销腔和机器翻译腔；不要使用「本文」「该推文」「这条值得一看」这类旁观者口吻，除非任务明确要求。"
+  "preferences": "术语和表达偏好：\n- 中文输出中，agent / Agent / AI agent 在 AI 语境下统一译为「智能体」，不要译成代理、经纪人或特工；只有明确指软件代理、平台代理或法律代理时才译为「代理」。\n- 中文输出中，prompt 译为「提示词」，workflow 译为「工作流」，context 译为「上下文」。\n- LLM 可译为「大语言模型」，面向普通读者时可写「大模型」；API、SaaS、AI、ChatGPT、Claude、Codex 等产品名或缩写可保留英文。\n- 避免港台腔、营销腔和机器翻译腔；不要使用「本文」「该推文」「这条值得一看」这类旁观者口吻，除非任务明确要求。",
+  "autoCaptureOnOpen": true
 }
